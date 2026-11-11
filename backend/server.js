@@ -15,19 +15,31 @@ app.get('/todos', async (req, res) => {
 });
 
 app.post('/todos', async (req, res) => {
-  const todo = new Todo({ text: req.body.text, done: false });
-  await todo.save();
-  res.json(todo);
+  try {
+    const todo = new Todo({ text: req.body.text });
+    await todo.save();
+    res.status(201).json(todo);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 });
 
 app.put('/todos/:id', async (req, res) => {
-  const todo = await Todo.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after' });
-  res.json(todo);
+  try {
+    const todo = await Todo.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after' });
+    res.json(todo);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 });
 
 app.delete('/todos/:id', async (req, res) => {
-  await Todo.findByIdAndDelete(req.params.id);
-  res.json({ message: 'Deleted' });
+  try {
+    await Todo.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: 'Deleted' });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 });
 
 app.listen(3001, () => console.log('Server on port 3001'));

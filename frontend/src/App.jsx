@@ -4,6 +4,7 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [text, setText] = useState('');
   const API = 'http://localhost:3001/todos';
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetch(API)
@@ -13,14 +14,23 @@ function App() {
 
   const addTodo = async (e) => {
     e.preventDefault();
+    if (!text.trim()) {
+      setError('Please type a todo first.');
+      return;
+    }
     const res = await fetch(API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text, done: false })
     });
     const newTodo = await res.json();
+     if (!res.ok) {
+      setError(newTodo.error);
+      return;
+    }   
     setTodos([...todos, newTodo]);
     setText('');
+    setError('');
   };
 
   const deleteTodo = async (id) => {
@@ -45,6 +55,7 @@ function App() {
         <input value={text} onChange={(e) => setText(e.target.value)} />
         <button type="submit">Add</button>
       </form>
+      {error && <p style={{ color: 'crimson' }}>{error}</p>}
       <ul>
         {todos.map(todo => 
           <li key={todo._id}>
