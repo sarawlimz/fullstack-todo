@@ -3,10 +3,10 @@
 Self learning full stack with MERN (MongoDB, Express, React, Node.js) project.
 
 ## Tech stack
-MongoDB in Docker\
-Express as backend\
-React as frontend\
-Node.JS as runtime environment
+- MongoDB in Docker\
+- Express as backend\
+- React as frontend\
+- Node.JS as runtime environment
 
 ## How to run
 1. docker run -d -p 27017:27017 --name mongodb mongo
