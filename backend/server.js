@@ -2,12 +2,19 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const Todo = require('./model');
+const PORT = process.env.PORT || 3001;
+const MONGO_URI = process.env.MONGO_URI;
+
+if (!MONGO_URI) {
+  console.error('MONGO_URI is not defined in the environment variables.');
+  process.exit(1);
+}
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect('mongodb://127.0.0.1:27017/todos');
+mongoose.connect(MONGO_URI);
 
 app.get('/todos', async (req, res) => {
   const todos = await Todo.find();
@@ -26,7 +33,7 @@ app.post('/todos', async (req, res) => {
 
 app.put('/todos/:id', async (req, res) => {
   try {
-    const todo = await Todo.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after' });
+    const todo = await Todo.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after', runValidators: true });
     res.json(todo);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -42,4 +49,4 @@ app.delete('/todos/:id', async (req, res) => {
   }
 });
 
-app.listen(3001, () => console.log('Server on port 3001'));
+app.listen(PORT, () => console.log(`Server on port ${PORT}`));

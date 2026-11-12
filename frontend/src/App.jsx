@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 function App() {
   const [todos, setTodos] = useState([]);
   const [text, setText] = useState('');
-  const API = 'http://localhost:3001/todos';
+  const API = import.meta.env.VITE_API_URL;
   const [error, setError] = useState('');
 
   useEffect(() => {
